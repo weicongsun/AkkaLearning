@@ -46,6 +46,7 @@ public class Master extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
 
+
         if(message instanceof StartFlag){
             start();
         }
@@ -82,6 +83,12 @@ public class Master extends UntypedActor {
         }else if(message instanceof StopMaster){
             log.info("shut down master");
             getContext().system().shutdown();
+            
+        }else if(message instanceof  Error){
+            log.error("failed", (Error)message);
+            currentActiveItemCount--;
+            completedItemCount++;
+            this.self().tell(new Continue(), getSelf());
         }
     }
 
